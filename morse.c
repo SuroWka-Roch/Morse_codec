@@ -1,6 +1,8 @@
 #include "morse.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <stdio.h>
 
 
 //local functions
@@ -45,6 +47,7 @@ void morse_encode(morse_tree* root,char* to_encode,char* buffer){
             int location = location_in_table(&(root->level[j]), cur_char);
             if(location!=-1){
                 encode_char(root->level[j].level, location, &buffer);
+                break;
             }
         }
     }
@@ -77,7 +80,8 @@ static int location_in_table(morse_tree_level* lvl,char c){
 }
 
 static void encode_char(int lvl,int location, char** buffer){
-    int slice_len = lvl*2;
+    int slice_len = MORSE_AR_LEN(lvl)-1;
+    printf("len = %d lvl = %d\n",slice_len,lvl);
     for(int i=0;i<lvl;i++){
         slice_len=slice_len/2;
         if(location < slice_len){

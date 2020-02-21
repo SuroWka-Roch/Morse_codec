@@ -7,7 +7,9 @@
 
 #define TREE_DEPTH 4
 
-#define MORSE_AR_LEN(lvl) ((lvl)*2+1)
+//that's a mess you need math.h to run this 
+#include <math.h>
+#define MORSE_AR_LEN(lvl) ((int)(pow(2,(lvl))+1))
 
 #define LONG_SYMBOL '-'
 #define SHORT_SYMBOL '.'
