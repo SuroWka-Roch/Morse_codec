@@ -11,6 +11,7 @@ static void make_lvl(morse_tree* root, int lvl, char* code);
 static int location_in_table(morse_tree_level* lvl,char c);
 static void encode_char(int lvl,int location, char** buffer);
 static char decode_morse_char(morse_tree* root, char* token);
+static void decode_word(morse_tree* root, char* to_decode, char** buffer, char* stop_at);
 
 morse_tree* morse_init(){
     morse_tree* root = (morse_tree*) malloc(sizeof(morse_tree));
@@ -98,17 +99,46 @@ static void encode_char(int lvl,int location, char** buffer){
 }
 
 void morse_decode(morse_tree* root, char* to_decode, char* buffer){
-    const char seperator[2] = {SPACE_SYMBOL, '\0'};
-    long int len = 0;
-    char *token = strtok(to_decode, seperator);
-    char* writer_pointer = buffer;
-    while( token != NULL ) {
+    char* buffer_beginning = buffer;
+    char* tok_r_pt;
+    char* stop_at = NULL;
+    char *to_decode_pnt = to_decode;
+    char *to_decode_pnt_dragging = to_decode;
 
-        *writer_pointer = decode_morse_char(root, token);
-        writer_pointer++;
-        token = strtok(NULL, seperator);
+    printf("%p\n",to_decode_pnt);
+    to_decode_pnt = strstr(to_decode_pnt, WORD_SPACE_STR);
+
+    for(;to_decode_pnt != NULL; ){
+        decode_word(root, to_decode_pnt_dragging, &buffer, to_decode_pnt);
+        *buffer = SPACE_SYMBOL;
+        buffer++;
+        printf("%c\n",*to_decode_pnt);
+        to_decode_pnt += strlen(WORD_SPACE_STR);
+        to_decode_pnt_dragging = to_decode_pnt;
+        to_decode_pnt = strstr(to_decode_pnt, WORD_SPACE_STR);
+
     }
-    *writer_pointer = '\0';
+
+    decode_word(root, to_decode_pnt_dragging, &buffer, NULL);
+
+    *buffer = '\0';
+    buffer = buffer_beginning;
+
+}
+
+static void decode_word(morse_tree* root, char* to_decode, char** buffer, char* stop_at){
+    const char seperator[2] = {SPACE_SYMBOL, '\0'};
+    char* tok_r_pt;
+    char *token = strtok_r(to_decode, seperator, &tok_r_pt);
+    while( token != NULL) {
+        **buffer = decode_morse_char(root, token);
+        (*buffer)++;
+        
+        if(!(stop_at==NULL || tok_r_pt<=stop_at))
+            break;
+
+        token = strtok_r(NULL, seperator, &tok_r_pt);
+    }
 }
 
 static char decode_morse_char(morse_tree* root, char* token){

@@ -14,6 +14,7 @@
 #define LONG_SYMBOL '-'
 #define SHORT_SYMBOL '.'
 #define SPACE_SYMBOL ' '
+#define WORD_SPACE_STR "   "
 
 typedef struct{
     char* array;
