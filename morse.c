@@ -10,6 +10,7 @@ static void fill_array(char* array, char* code, int len);
 static void make_lvl(morse_tree* root, int lvl, char* code);
 static int location_in_table(morse_tree_level* lvl,char c);
 static void encode_char(int lvl,int location, char** buffer);
+static char decode_morse_char(morse_tree* root, char* token);
 
 morse_tree* morse_init(){
     morse_tree* root = (morse_tree*) malloc(sizeof(morse_tree));
@@ -81,7 +82,6 @@ static int location_in_table(morse_tree_level* lvl,char c){
 
 static void encode_char(int lvl,int location, char** buffer){
     int slice_len = MORSE_AR_LEN(lvl)-1;
-    printf("len = %d lvl = %d\n",slice_len,lvl);
     for(int i=0;i<lvl;i++){
         slice_len=slice_len/2;
         if(location < slice_len){
@@ -95,5 +95,31 @@ static void encode_char(int lvl,int location, char** buffer){
     }
     **buffer = SPACE_SYMBOL;
     (*buffer)++;
+}
+
+void morse_decode(morse_tree* root, char* to_decode, char* buffer){
+    const char seperator[2] = {SPACE_SYMBOL, '\0'};
+    long int len = 0;
+    char *token = strtok(to_decode, seperator);
+    char* writer_pointer = buffer;
+    while( token != NULL ) {
+
+        *writer_pointer = decode_morse_char(root, token);
+        writer_pointer++;
+        token = strtok(NULL, seperator);
+    }
+    *writer_pointer = '\0';
+}
+
+static char decode_morse_char(morse_tree* root, char* token){
+    int lvl = strlen(token)-1;
+    int place_in_tree = 0;
+    int lvl_len = MORSE_AR_LEN( strlen(token)) - 1;
+    for(int i = 0; i<=lvl;i++){
+        if(token[i] == LONG_SYMBOL){
+            place_in_tree += lvl_len/pow(2,i+1);
+        }
+    }
+    return root->level[lvl].array[place_in_tree];
 }
 

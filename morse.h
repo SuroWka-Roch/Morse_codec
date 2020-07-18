@@ -9,7 +9,7 @@
 
 //that's a mess you need math.h to run this 
 #include <math.h>
-#define MORSE_AR_LEN(lvl) ((int)(pow(2,(lvl))+1))
+#define MORSE_AR_LEN(lvl) ((int)(pow(2,(lvl))+1)) //Counting starts form 1
 
 #define LONG_SYMBOL '-'
 #define SHORT_SYMBOL '.'
@@ -17,7 +17,7 @@
 
 typedef struct{
     char* array;
-    int level; // @param row in morse tree. Array length is level * 2. 
+    int level; // @param row in morse tree. Array length is 2^level  + 1. 
 }morse_tree_level;
 
 typedef struct
@@ -40,7 +40,7 @@ void morse_drop(morse_tree* root);
  *  @param buffer memory space to write output to 
  * 
  */
-void morse_encode(morse_tree* root, char* to_encode,char* buffer);
-void morse_decode(morse_tree* root, char* to_encode, char* buffer);
+void morse_encode(morse_tree* root, char* to_encode, char* buffer);
+void morse_decode(morse_tree* root, char* to_decode, char* buffer);
 
 #endif
