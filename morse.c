@@ -100,8 +100,6 @@ static void encode_char(int lvl,int location, char** buffer){
 
 void morse_decode(morse_tree* root, char* to_decode, char* buffer){
     char* buffer_beginning = buffer;
-    char* tok_r_pt;
-    char* stop_at = NULL;
     char *to_decode_pnt = to_decode;
     char *to_decode_pnt_dragging = to_decode;
 
