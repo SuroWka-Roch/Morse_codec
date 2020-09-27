@@ -1,14 +1,16 @@
 /* @file morse.h
  * @brief Header file for codec to and from morse code.  
 */
-
 #ifndef MORSE
 #define MORSE
 
 #define TREE_DEPTH 4
 
-//that's a mess you need math.h to run this 
-#include <math.h>
+//work around for math.h dependency
+#ifndef _MATH_H_
+double pow(double base, double exponent);
+#endif
+
 #define MORSE_AR_LEN(lvl) ((int)(pow(2,(lvl))+1)) //Counting starts form 1
 
 #define LONG_SYMBOL '-'

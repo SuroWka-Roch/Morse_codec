@@ -1,7 +1,6 @@
 #include "morse.h"
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <stdio.h>
 
 
@@ -12,6 +11,21 @@ static int location_in_table(morse_tree_level* lvl,char c);
 static void encode_char(int lvl,int location, char** buffer);
 static char decode_morse_char(morse_tree* root, char* token);
 static void decode_word(morse_tree* root, char* to_decode, char** buffer, char* stop_at);
+
+
+//Work around for dependency on math.h lib 
+#ifndef _MATH_H_
+
+double pow(double base, double exponent){
+    int result=1;
+    for (; exponent>0; exponent--)
+    {
+        result = result * base;
+    }
+    return result;
+}
+
+#endif
 
 morse_tree* morse_init(){
     morse_tree* root = (morse_tree*) malloc(sizeof(morse_tree));
@@ -100,12 +114,8 @@ static void encode_char(int lvl,int location, char** buffer){
 
 void morse_decode(morse_tree* root, char* to_decode, char* buffer){
     char* buffer_beginning = buffer;
-    char* tok_r_pt;
-    char* stop_at = NULL;
     char *to_decode_pnt = to_decode;
     char *to_decode_pnt_dragging = to_decode;
-
-    printf("%p\n",to_decode_pnt);
     to_decode_pnt = strstr(to_decode_pnt, WORD_SPACE_STR);
 
     for(;to_decode_pnt != NULL; ){
